@@ -20,12 +20,11 @@ Page({
     nowWheater: '',
     nowWeatherBackground:''
   },
-  onLoad(){
-    console.log('page load success');
+  getNow(callback){
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
-      data:{
-        city:'北京市'
+      data: {
+        city: '北京市'
       },
       success: res => {
         let result = res.data.result;
@@ -33,7 +32,7 @@ Page({
         let temp = result.now.temp;
         let weather = result.now.weather;
         this.setData({
-          nowTemp: temp+'°',
+          nowTemp: temp + '°',
           nowWeather: weatherMap[weather],
           nowWeatherBackground: `/images/${weather}-bg.png`
         });
@@ -41,7 +40,18 @@ Page({
           frontColor: '#000000',
           backgroundColor: weatherColorMap[weather],
         })
+      },
+      complete: () => {
+        callback && callback();
       }
     })
+  },
+  onPullDownRefresh(){
+    this.getNow(()=>{
+      wx.stopPullDownRefresh();
+    });
+  },
+  onLoad(){
+    this.getNow()
   }
 })
