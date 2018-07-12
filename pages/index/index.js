@@ -1,7 +1,24 @@
+const weatherMap = {
+  'sunny': '晴天',
+  'cloudy': '多云',
+  'overcast': '阴',
+  'lightrain': '小雨',
+  'heavyrain': '大雨',
+  'snow':'雪'
+}
+const weatherColorMap = {
+  'sunny': '#cbeefd',
+  'cloudy': '#deef6',
+  'overcast': '#c6ced2',
+  'lightrain': '#bdd5e1',
+  'heavyrain': '#c5ccd0',
+  'snow': '#aae1fc'
+}
 Page({
   data: {
-    nowTemp: '14°',
-    nowWheater: '阴天'
+    nowTemp: '',
+    nowWheater: '',
+    nowWeatherBackground:''
   },
   onLoad(){
     console.log('page load success');
@@ -11,7 +28,19 @@ Page({
         city:'北京市'
       },
       success: res => {
-        console.log(res);
+        let result = res.data.result;
+        console.log(result);
+        let temp = result.now.temp;
+        let weather = result.now.weather;
+        this.setData({
+          nowTemp: temp+'°',
+          nowWeather: weatherMap[weather],
+          nowWeatherBackground: `/images/${weather}-bg.png`
+        });
+        wx.setNavigationBarColor({
+          frontColor: '#000000',
+          backgroundColor: weatherColorMap[weather],
+        })
       }
     })
   }

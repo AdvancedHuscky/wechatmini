@@ -1,7 +1,7 @@
 <!--index.wxml-->
 <view class='weather-wrapper'>
   <view class='temp'>{{nowTemp}}</view>
-  <view class='desc'>{{nowWheater}}</view>
-  <image class='weather-bg' src='/images/sunny-bg.png' mode='scaleToFill'></image>
+  <view class='desc'>{{nowWeather}}</view>
+  <image class='weather-bg' src='{{nowWeatherBackground}}' mode='scaleToFill'></image>
 </view>
 
