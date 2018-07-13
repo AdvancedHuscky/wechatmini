@@ -19,7 +19,10 @@ Page({
     nowTemp: '',
     nowWheater: '',
     nowWeatherBackground:'',
-    nowForecast:[]
+    nowForecast:[],
+    todayTemp:'',
+    todayDate:''
+
   },
   getNow(callback){
     wx.request({
@@ -29,29 +32,9 @@ Page({
       },
       success: res => {
         let result = res.data.result;
-        console.log(result);
-        let temp = result.now.temp;
-        let weather = result.now.weather;
-        let forecast = result.forecast;
-        let nowHours = new Date().getHours();
-        let nowForecast = [];
-        for(let i=0;i<8;i++){
-          nowForecast.push({
-            time:(i*3+nowHours)%24 + '时',
-            iconPath:'/images/'+forecast[i].weather+'-icon.png',
-            temp:forecast[i].temp+'°'
-          })
-        }
-        this.setData({
-          nowTemp: temp + '°',
-          nowWeather: weatherMap[weather],
-          nowWeatherBackground: `/images/${weather}-bg.png`,
-          nowForecast
-        });
-        wx.setNavigationBarColor({
-          frontColor: '#000000',
-          backgroundColor: weatherColorMap[weather],
-        })
+        this.setHours(result);
+        this.setToday(result);
+        this.showWeatherToday(result);
       },
       complete: () => {
         callback && callback();
@@ -65,5 +48,45 @@ Page({
   },
   onLoad(){
     this.getNow()
+  },
+  setHours(result){
+    let forecast = result.forecast;
+    let nowHours = new Date().getHours();
+    let nowForecast = [];
+    for (let i = 0; i < 8; i++) {
+      nowForecast.push({
+        time: (i * 3 + nowHours) % 24 + '时',
+        iconPath: '/images/' + forecast[i].weather + '-icon.png',
+        temp: forecast[i].temp + '°'
+      })
+    }
+    this.setData({
+      nowForecast
+    })
+  },
+  showWeatherToday(result){
+    let temp = result.now.temp;
+    let weather = result.now.weather;
+    this.setData({
+      nowTemp: temp + '°',
+      nowWeather: weatherMap[weather],
+      nowWeatherBackground: `/images/${weather}-bg.png`,
+    });
+    wx.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: weatherColorMap[weather],
+    })
+  },
+  setToday(result){
+    let date = new Date();
+    this.setData({
+      todayTemp:`${result.today.minTemp}° - ${result.today.maxTemp}°`,
+      todayDate:`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} 今天`
+    })
+  },
+  onTapDayWeather(){
+    wx.showToast({
+      title: 'hahahaha',
+    })
   }
 })
