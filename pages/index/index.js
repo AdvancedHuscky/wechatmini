@@ -18,7 +18,8 @@ Page({
   data: {
     nowTemp: '',
     nowWheater: '',
-    nowWeatherBackground:''
+    nowWeatherBackground:'',
+    nowForecast:[]
   },
   getNow(callback){
     wx.request({
@@ -31,10 +32,21 @@ Page({
         console.log(result);
         let temp = result.now.temp;
         let weather = result.now.weather;
+        let forecast = result.forecast;
+        let nowHours = new Date().getHours();
+        let nowForecast = [];
+        for(let i=0;i<8;i++){
+          nowForecast.push({
+            time:(i*3+nowHours)%24 + '时',
+            iconPath:'/images/'+forecast[i].weather+'-icon.png',
+            temp:forecast[i].temp+'°'
+          })
+        }
         this.setData({
           nowTemp: temp + '°',
           nowWeather: weatherMap[weather],
-          nowWeatherBackground: `/images/${weather}-bg.png`
+          nowWeatherBackground: `/images/${weather}-bg.png`,
+          nowForecast
         });
         wx.setNavigationBarColor({
           frontColor: '#000000',
