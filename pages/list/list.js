@@ -11,7 +11,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    
+    wx.request({
+      url: 'https://test-miniprogram.com/api/weather/now',
+      data: {
+        city: '北京市',
+        time: new Date().getTime()
+      },
+      success: res => {
+        console.log(res);
+      }
+    })
   },
 
   /**
