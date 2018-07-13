@@ -4,4 +4,8 @@
   <view class='desc'>{{nowWeather}}</view>
   <image class='weather-bg' src='{{nowWeatherBackground}}' mode='scaleToFill'></image>
 </view>
+<view class='postcast'>
+  <image class="weather-icon" src='/images/time-icon.png'></image>
+  <view class="time-tips">未来24小时天气预报</view>
+</view>
 

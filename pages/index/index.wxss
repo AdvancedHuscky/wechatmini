@@ -23,3 +23,17 @@
   height: 100%;
   z-index: -1;
 }
+.postcast{
+  margin: 0 auto;
+  font-size: 30rpx;
+  text-align:center;
+  margin-top:40rpx;
+}
+.weather-icon{
+  width: 40rpx;
+  height:30rpx;
+}
+.time-tips{
+  margin-left: 5px;
+  display: inline-block;
+}
