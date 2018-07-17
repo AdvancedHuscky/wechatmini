@@ -5,13 +5,18 @@ Page({
    * 页面的初始数据
    */
   data: {
-    weekWeather:[1,2,3,4,5,6,7]
+    weekWeather:[1,2,3,4,5,6,7],
+    city:'广州市'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
+  onLoad: function (options) {
+    this.setData({
+      city:options.city
+    })
+    console.log(options.city);
     this.getWeekWeather()
   },
   onPullDownRefresh(){
@@ -23,7 +28,7 @@ Page({
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/future',
       data: {
-        city: '北京市',
+        city: this.data.city,
         time: new Date().getTime()
       },
       success: res => {

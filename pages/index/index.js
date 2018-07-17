@@ -14,6 +14,8 @@ const weatherColorMap = {
   'heavyrain': '#c5ccd0',
   'snow': '#aae1fc'
 }
+var QQMapWX = require('../../libs/qqmap-wx-jssdk.js');
+
 Page({
   data: {
     nowTemp: '',
@@ -21,14 +23,15 @@ Page({
     nowWeatherBackground:'',
     nowForecast:[],
     todayTemp:'',
-    todayDate:''
-
+    todayDate:'',
+    city:'广州市',
+    getLocationTips:'点击获取当前位置'
   },
   getNow(callback){
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
       data: {
-        city: '北京市'
+        city: this.data.city
       },
       success: res => {
         let result = res.data.result;
@@ -47,7 +50,11 @@ Page({
     });
   },
   onLoad(){
-    this.getNow()
+    // 实例化API核心类
+    this.qqmapsdk = new QQMapWX({
+      key: 'EAXBZ-33R3X-AA64F-7FIPQ-BY27J-5UF5B'
+    });
+    this.getNow();
   },
   setHours(result){
     let forecast = result.forecast;
@@ -86,7 +93,27 @@ Page({
   },
   onTapDayWeather(){
     wx.navigateTo({
-      url: '/pages/list/list',
+      url: '/pages/list/list?city='+this.data.city,
     })
+  },
+  onTapLocation(){
+    wx.getLocation({
+      success:res=>{
+        this.qqmapsdk.reverseGeocoder({
+          location:{
+            latitude:res.latitude,
+            longitude:res.longitude
+          },
+          success:res=>{
+            let city = res.result.address_component.city;
+            this.setData({
+              city,
+              getLocationTips:''
+            })
+          }
+        })
+      }
+    })
+    this.getNow();
   }
 })
