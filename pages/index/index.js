@@ -67,19 +67,20 @@ Page({
     });
     this.getNow();
   },
-  onShow(){
-    wx.getSetting({
-      success: res=>{
-        let auth = res.authSetting['scope.userLocation']
-        if(auth && this.data.locationAuthType !== AUTHORIZED){//权限从无到有
-          this.setData({
-            locationAuthType:AUTHORIZED,
-            locationTipsText:AUTHORIZED_TIPS
-          })
-        }
-      }
-    })
-  },
+  //使用这个生命周期函数可以达到判断是否获得位置权限授权的目的，但是每次页面刷新跳转都会调用，不如放在openSetting中实现
+  // onShow(){
+  //   wx.getSetting({
+  //     success: res=>{
+  //       let auth = res.authSetting['scope.userLocation']
+  //       if(auth && this.data.locationAuthType !== AUTHORIZED){//权限从无到有
+  //         this.setData({
+  //           locationAuthType:AUTHORIZED,
+  //           locationTipsText:AUTHORIZED_TIPS
+  //         })
+  //       }
+  //     }
+  //   })
+  // },
   setHours(result){
     let forecast = result.forecast;
     let nowHours = new Date().getHours();
@@ -120,9 +121,17 @@ Page({
       url: '/pages/list/list?city='+this.data.city,
     })
   },
+  //点击获取位置
   onTapLocation(){
     if(this.data.locationAuthType === UNAUTHORIZED)
-    wx.openSetting()
+    wx.openSetting({
+      success: res=>{
+        let auth = res.authSetting["scope.userLocation"]
+        if(auth){
+          this.getlocation()
+        }
+      }
+    })
     else
     this.getLocation()
   },
